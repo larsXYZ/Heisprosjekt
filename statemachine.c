@@ -7,7 +7,7 @@
 int statemachine_init_floor(void)
 {
 	elev_set_motor_direction(DIRN_UP);
-	printf(" -DETERMINING POSITION\n");
+	printf("   -determining position\n");
 
 	while (1)
 	{
@@ -17,7 +17,7 @@ int statemachine_init_floor(void)
 		if (floor != -1)
 		{
 			elev_set_motor_direction(DIRN_STOP);
-			printf("%s %d %s"," -FLOOR:" ,floor+1, "\n");
+			printf("%s %d %s","   -floor found :" ,floor+1, "\n");
 			return floor;
 		}
 	}
