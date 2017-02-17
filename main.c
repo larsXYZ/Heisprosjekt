@@ -11,13 +11,15 @@ int main() {
         printf("Unable to initialize elevator hardware!\n");
         return 1;
     }
+	else
+	{
+		printf(" -INITIALIZING HARDWARE\n");
+	}
 
 	//Initialize statemachine
 	struct Statemachine statemachine;
 	statemachine.state = INIT;
 	statemachine.current_floor = statemachine_init_floor();
-
-	printf("%d", statemachine.current_floor);
 
     return 0;
 }
