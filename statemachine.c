@@ -4,6 +4,13 @@
 
 /* For descriptions see statemachine.h */
 
+void statemachine_init(struct Statemachine* target)
+{
+	target->state = INIT;
+	target->current_floor = statemachine_init_floor();
+	target->state = NORM;
+}
+
 int statemachine_init_floor(void)
 {
 	elev_set_motor_direction(DIRN_UP);
