@@ -1,5 +1,5 @@
 
-enum Passenger_outside{NO_PASSENGER, GOING_UP, GOING_DOWN, BOTH_WAYS}; //Possible wait list conditions, where does a passenger want to go?
+enum Passenger_outside{NO_PASSENGER =0, GOING_UP, GOING_DOWN, BOTH_WAYS}; //Possible wait list conditions, where does a passenger want to go?
 
 struct Orderhandler
 {
@@ -8,4 +8,6 @@ struct Orderhandler
 
 void orderhandler_init(struct Orderhandler* target); //Initializes orderhandler
 
-void orderhandler_print_wait_list(struct Orderhandler target); //Printing function for debugging, prints state of wait_list
+void orderhandler_print_wait_list(struct Orderhandler *target); //Printing function for debugging, prints state of wait_list
+
+void orderhandler_update_wait_list(struct Orderhandler *target); //Checks with sensors to update waitlist

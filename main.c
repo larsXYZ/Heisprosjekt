@@ -25,8 +25,13 @@ int main()
 	struct Orderhandler orderhandler;
 	orderhandler_init(&orderhandler);
 
-	orderhandler_print_wait_list(orderhandler);
-	printf("%d", statemachine.current_floor);
+	int i = 0;
+	while (1)
+	{
+		i++;
+		orderhandler_update_wait_list(&orderhandler);
+		if (i % 100000 == 0) orderhandler_print_wait_list(&orderhandler);
+	}
 
     return 0;
 }
