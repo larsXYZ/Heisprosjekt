@@ -4,12 +4,17 @@ enum Passenger_outside{NO_PASSENGER =0, GOING_UP, GOING_DOWN, BOTH_WAYS}; //Poss
 struct Orderhandler
 {
 	enum Passenger_outside wait_list[4]; //Vector holding information about passenger outside the elevator
+	int target_list[4]; //0 - not a target, 1 target, elevator should be heading there soon (0 - first floor , etc), -1 empty
 };
 
 void orderhandler_init(struct Orderhandler* target); //Initializes orderhandler
 
-void orderhandler_print_wait_list(struct Orderhandler *target); //Printing function for debugging, prints state of wait_list
+void orderhandler_print__lists(struct Orderhandler *target); //Printing function for debugging, prints state of wait_list
 
 void orderhandler_update_wait_list(struct Orderhandler *target); //Checks with sensors to update waitlist
 
 void orderhandler_update_lights(struct Orderhandler *target); //Updates lights on controlpanel
+
+void orderhandler_update_target_list(struct Orderhandler *target); //Updates target list
+
+void orderhandler_add_target(struct Orderhandler *target, int floor); //Adds new target to the target list if it fits, target = floornumber

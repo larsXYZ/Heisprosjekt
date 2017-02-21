@@ -12,13 +12,22 @@ void orderhandler_init(struct Orderhandler* target)
 	target->wait_list[1] = NO_PASSENGER;
 	target->wait_list[2] = NO_PASSENGER;
 	target->wait_list[3] = NO_PASSENGER;
+	
+	target->target_list[0] = -1;
+	target->target_list[1] = -1;
+	target->target_list[2] = -1;
+	target->target_list[3] = -1;
 }
 
-void orderhandler_print_wait_list(struct Orderhandler *target)
+void orderhandler_print__lists(struct Orderhandler *target)
 {
 	for (int i = 0; i < 4; i++)
 	{
 		printf("%d %s", target->wait_list[i] , " ");
+	}
+		for (int i = 0; i < 4; i++)
+	{
+		printf("%d %s", target->target_list[i] , " ");
 	}
 	printf("\n");
 }
@@ -65,3 +74,25 @@ void orderhandler_update_lights(struct Orderhandler *target)
 		if (floor != 0) elev_set_button_lamp(BUTTON_CALL_DOWN, floor, LIGHT_DOWN);
 	}
 }
+
+void orderhandler_update_target_list(struct Orderhandler *target)
+{
+	for (int floor = 0; floor < 4; floor++)
+	{
+		if (elev_get_button_signal(BUTTON_COMMAND, floor)) orderhandler_add_target(target,floor);
+		
+		
+	}	
+}
+
+void orderhandler_add_target(struct Orderhandler *target, int floor)
+{
+	for (int i = 0; i < 4; i++) if(target->target_list[i] == floor) return;
+	for (int i = 0; i < 4; i++) if(target->target_list[i] == -1) target->target_list[i] = floor;	
+}
+
+
+
+
+
+
