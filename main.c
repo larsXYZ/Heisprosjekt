@@ -30,6 +30,7 @@ int main()
 	{
 		i++;
 		orderhandler_update_wait_list(&orderhandler);
+		orderhandler_update_lights(&orderhandler);
 		if (i % 100000 == 0) orderhandler_print_wait_list(&orderhandler);
 	}
 

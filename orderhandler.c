@@ -47,3 +47,21 @@ void orderhandler_update_wait_list(struct Orderhandler *target)
 	}
 
 }
+
+void orderhandler_update_lights(struct Orderhandler *target)
+{
+	for (int floor = 0; floor < 4; floor++) //Etasjebestillingsknapper
+	{
+		int LIGHT_UP;
+		int LIGHT_DOWN;
+		
+		if (floor != 3) LIGHT_UP = (target->wait_list[floor] == GOING_UP || target->wait_list[floor] == BOTH_WAYS);
+		else LIGHT_UP = 0;
+		
+		if (floor != 0) LIGHT_DOWN = (target->wait_list[floor] == GOING_DOWN || target->wait_list[floor] == BOTH_WAYS);
+		else LIGHT_DOWN = 0;
+		
+		if (floor != 3) elev_set_button_lamp(BUTTON_CALL_UP, floor, LIGHT_UP);
+		if (floor != 0) elev_set_button_lamp(BUTTON_CALL_DOWN, floor, LIGHT_DOWN);
+	}
+}

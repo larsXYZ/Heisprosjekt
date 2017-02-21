@@ -11,3 +11,5 @@ void orderhandler_init(struct Orderhandler* target); //Initializes orderhandler
 void orderhandler_print_wait_list(struct Orderhandler *target); //Printing function for debugging, prints state of wait_list
 
 void orderhandler_update_wait_list(struct Orderhandler *target); //Checks with sensors to update waitlist
+
+void orderhandler_update_lights(struct Orderhandler *target);
