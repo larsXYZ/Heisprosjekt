@@ -31,6 +31,10 @@ int main()
 		i++;
 		orderhandler_update_wait_list(&orderhandler);
 		orderhandler_update_lights(&orderhandler);
+		
+		statemachine_update_current_floor(&statemachine);
+		statemachine_update_current_floor_light(&statemachine);
+		
 		if (i % 100000 == 0) orderhandler_print_wait_list(&orderhandler);
 	}
 

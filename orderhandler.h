@@ -12,4 +12,4 @@ void orderhandler_print_wait_list(struct Orderhandler *target); //Printing funct
 
 void orderhandler_update_wait_list(struct Orderhandler *target); //Checks with sensors to update waitlist
 
-void orderhandler_update_lights(struct Orderhandler *target);
+void orderhandler_update_lights(struct Orderhandler *target); //Updates lights on controlpanel

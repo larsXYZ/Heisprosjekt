@@ -25,7 +25,7 @@ void orderhandler_print_wait_list(struct Orderhandler *target)
 
 void orderhandler_update_wait_list(struct Orderhandler *target)
 {
-	for (int i = 0; i < 4; i++)
+	for (int i = 0; i < 4; i++) //Går gjennom bestillingsknappene og oppdaterer minne
 	{
 		int button_state_up = 0;
 		int button_state_down = 0;	
