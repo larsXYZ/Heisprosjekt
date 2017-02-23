@@ -27,7 +27,7 @@ int main()
 	struct Timehandler timehandler;
 	
 	
-	statemachine_run(&statemachine, &orderhandler);
+	statemachine_run(&statemachine, &orderhandler, &timehandler);
 
 
 

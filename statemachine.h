@@ -1,4 +1,5 @@
 struct Orderhandler;
+struct Timehandler;
 
 enum machine_state{IDLE, NORM, STOP, ESTOP};
 
@@ -16,6 +17,6 @@ void statemachine_update_current_floor(struct Statemachine* target); //Updates t
 
 void statemachine_update_current_floor_light(struct Statemachine* target);//Updates the current_floor lights
 
-void statemachine_run(struct Statemachine* statemachine, struct Orderhandler* orderhandler);
+void statemachine_run(struct Statemachine* statemachine, struct Orderhandler* orderhandler, struct Timehandler* timehandler);
 
 void statemachine_print_state(struct Statemachine* statemachine);

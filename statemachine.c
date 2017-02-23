@@ -1,5 +1,6 @@
 #include "statemachine.h"
 #include "orderhandler.h"
+#include "timehandler.h"
 #include "elev.h"
 #include <stdio.h>
 
@@ -63,14 +64,15 @@ void statemachine_run(struct Statemachine* statemachine, struct Orderhandler* or
 		{
 	
 			case IDLE:	//CHECKS IF ANY BUTTON IS PRESSED, GOES TO DESIGNATED FLOOR IF CORRESPONDING BUTTON IS PRESSED
-				
+			{
 				int button_pressed = 0;
 				for (int i = 0; i < 4; i++) if (orderhandler->wait_list[i] != NO_PASSENGER) {button_pressed = 1; orderhandler_add_target(orderhandler,i); }
 				if (button_pressed) statemachine->state = NORM;
 				
 				break;
+			}
 			case NORM:	//GOING TO TARGET IN TARGETLIST
-
+			{
 				if (elev_get_floor_sensor_signal() == orderhandler->target_list[0]) { orderhandler_remove_target(orderhandler,0); statemachine->state = STOP; }
 				if (orderhandler->target_list[0] == -1) { statemachine->state = IDLE; elev_set_motor_direction(DIRN_STOP); break;}
 				
@@ -79,22 +81,26 @@ void statemachine_run(struct Statemachine* statemachine, struct Orderhandler* or
 				else elev_set_motor_direction(DIRN_STOP);
 				
 				break;
+			}
 			case STOP:
-			
+			{
 			
 			
 			
 			
 				break;
+			}
 			case ESTOP:
-		
-			
+			{
 			
 			
 			
 				break;
+			}
 			default:
+			{
 				printf("EXTREME SYSTEM ERROR, RUN FOR YOUR LIFE");
+			}
 		
 	
 		}
