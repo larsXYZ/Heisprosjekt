@@ -19,7 +19,7 @@ void orderhandler_init(struct Orderhandler* target)
 	target->target_list[3] = -1;
 }
 
-void orderhandler_print__lists(struct Orderhandler *target)
+void orderhandler_print_lists(struct Orderhandler *target)
 {
 	for (int i = 0; i < 4; i++)
 	{
@@ -59,7 +59,7 @@ void orderhandler_update_wait_list(struct Orderhandler *target)
 
 void orderhandler_update_lights(struct Orderhandler *target)
 {
-	for (int floor = 0; floor < 4; floor++) //Etasjebestillingsknapper
+	for (int floor = 0; floor < 4; floor++)
 	{
 		int LIGHT_UP;
 		int LIGHT_DOWN;
@@ -72,6 +72,9 @@ void orderhandler_update_lights(struct Orderhandler *target)
 		
 		if (floor != 3) elev_set_button_lamp(BUTTON_CALL_UP, floor, LIGHT_UP);
 		if (floor != 0) elev_set_button_lamp(BUTTON_CALL_DOWN, floor, LIGHT_DOWN);
+		
+		elev_set_button_lamp(BUTTON_COMMAND, floor, 0);
+		for (int q = 0; q < 4; q++) if (target->target_list[q] == floor) {elev_set_button_lamp(BUTTON_COMMAND, floor, 1); break;}
 	}
 }
 
@@ -80,17 +83,25 @@ void orderhandler_update_target_list(struct Orderhandler *target)
 	for (int floor = 0; floor < 4; floor++)
 	{
 		if (elev_get_button_signal(BUTTON_COMMAND, floor)) orderhandler_add_target(target,floor);
-		
-		
 	}	
 }
 
 void orderhandler_add_target(struct Orderhandler *target, int floor)
 {
 	for (int i = 0; i < 4; i++) if(target->target_list[i] == floor) return;
-	for (int i = 0; i < 4; i++) if(target->target_list[i] == -1) target->target_list[i] = floor;	
+	for (int i = 0; i < 4; i++) if(target->target_list[i] == -1) {target->target_list[i] = floor; return; }
 }
 
+void orderhandler_remove_target(struct Orderhandler *target, int start_index)
+{
+	target->target_list[3] = -1;
+	for (int i = start_index; i < 3; i++)
+	{
+		if (target->target_list[i+1] == -1) {target->target_list[i] = -1; break;}
+		target->target_list[i] = target->target_list[i+1];
+	}
+	
+}
 
 
 

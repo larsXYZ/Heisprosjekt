@@ -9,7 +9,7 @@ struct Orderhandler
 
 void orderhandler_init(struct Orderhandler* target); //Initializes orderhandler
 
-void orderhandler_print__lists(struct Orderhandler *target); //Printing function for debugging, prints state of wait_list
+void orderhandler_print_lists(struct Orderhandler *target); //Printing function for debugging, prints state of wait_list
 
 void orderhandler_update_wait_list(struct Orderhandler *target); //Checks with sensors to update waitlist
 
@@ -18,3 +18,5 @@ void orderhandler_update_lights(struct Orderhandler *target); //Updates lights o
 void orderhandler_update_target_list(struct Orderhandler *target); //Updates target list
 
 void orderhandler_add_target(struct Orderhandler *target, int floor); //Adds new target to the target list if it fits, target = floornumber
+
+void orderhandler_remove_target(struct Orderhandler *target, int start_index); //Removes target #1 from target list
