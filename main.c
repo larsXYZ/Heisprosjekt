@@ -19,17 +19,15 @@ int main()
 	struct Orderhandler orderhandler;
 	orderhandler_init(&orderhandler);
 	
+	//Initialize timehandler
+	struct Timehandler timehandler;
+	printf("   -initializing timehandler\n");
+	
 	//Initialize statemachine
 	struct Statemachine statemachine;
 	statemachine_init(&statemachine);
-	
-	//Initialize timehandler
-	struct Timehandler timehandler;
-	
-	
+
 	statemachine_run(&statemachine, &orderhandler, &timehandler);
 
-
-
-    return 0;
+    	return 0;
 }

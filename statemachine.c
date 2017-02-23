@@ -1,6 +1,6 @@
 #include "statemachine.h"
 #include "orderhandler.h"
-#include "timehandler.h"
+#include "timer.h"
 #include "elev.h"
 #include <stdio.h>
 
@@ -74,7 +74,15 @@ void statemachine_run(struct Statemachine* statemachine, struct Orderhandler* or
 			case NORM:	//GOING TO TARGET IN TARGETLIST
 			{
 				if (elev_get_floor_sensor_signal() == orderhandler->target_list[0]) { orderhandler_remove_target(orderhandler,0); statemachine->state = STOP; }
-				if (orderhandler->target_list[0] == -1) { statemachine->state = IDLE; elev_set_motor_direction(DIRN_STOP); break;}
+				
+				if (orderhandler->target_list[0] == -1)
+				{ 
+					statemachine->state = IDLE;
+					elev_set_motor_direction(DIRN_STOP);
+					timehandler_delay(timehandler,3);
+					elev_set_door_open_lamp(1);
+					break;
+				}
 				
 				if(statemachine->current_floor > orderhandler->target_list[0] && orderhandler->target_list[0] != -1) elev_set_motor_direction(DIRN_DOWN);
 				else if (statemachine->current_floor < orderhandler->target_list[0] && orderhandler->target_list[0] != -1) elev_set_motor_direction(DIRN_UP);
@@ -84,10 +92,12 @@ void statemachine_run(struct Statemachine* statemachine, struct Orderhandler* or
 			}
 			case STOP:
 			{
-			
-			
-			
-			
+				if(timehandler_is_time_up(timehandler))
+				{
+					statemachine->state = NORM;
+					elev_set_door_open_lamp(1);
+				}
+				
 				break;
 			}
 			case ESTOP:
