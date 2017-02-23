@@ -25,7 +25,10 @@ void orderhandler_print_lists(struct Orderhandler *target)
 	{
 		printf("%d %s", target->wait_list[i] , " ");
 	}
-		for (int i = 0; i < 4; i++)
+	
+	printf("%s", "| ");
+	
+	for (int i = 0; i < 4; i++)
 	{
 		printf("%d %s", target->target_list[i] , " ");
 	}
