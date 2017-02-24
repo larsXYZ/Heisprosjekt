@@ -95,7 +95,7 @@ void statemachine_run(struct Statemachine* statemachine, struct Orderhandler* or
 				if(timehandler_is_time_up(timehandler))
 				{
 					statemachine->state = NORM;
-					elev_set_door_open_lamp(1);
+					elev_set_door_open_lamp(0);
 				}
 				
 				break;
