@@ -18,6 +18,7 @@ int main()
 	//Initialize orderhandler
 	struct Orderhandler orderhandler;
 	orderhandler_init(&orderhandler);
+	printf("   -initializing orderhandler\n");
 	
 	//Initialize timehandler
 	struct Timehandler timehandler;

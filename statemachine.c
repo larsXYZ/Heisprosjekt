@@ -1,7 +1,6 @@
 #include "statemachine.h"
 #include "orderhandler.h"
 #include "timer.h"
-#include "elev.h"
 #include <stdio.h>
 
 /* For descriptions see statemachine.h */
@@ -9,6 +8,7 @@
 void statemachine_init(struct Statemachine* target)
 {
 	target->current_floor = statemachine_init_floor();
+	target->current_motor_dir = DIRN_STOP;
 	target->state = IDLE;
 }
 
@@ -47,35 +47,49 @@ void statemachine_print_state(struct Statemachine* statemachine)
 	printf( "%s %u %s", "current state: ",statemachine->state, " | ");
 }
 
+void statemachine_motor_control(struct Statemachine* statemachine, struct Orderhandler* orderhandler)
+{
+	if (orderhandler->target_list[0] > statemachine->current_floor && orderhandler->target_list[0] != -1) statemachine->current_motor_dir = DIRN_UP;
+	if (orderhandler->target_list[0] < statemachine->current_floor && orderhandler->target_list[0] != -1) statemachine->current_motor_dir = DIRN_DOWN;
+	if (orderhandler->target_list[0] != -1) statemachine->current_motor_dir = DIRN_STOP;
+	
+	elev_set_motor_direction(statemachine->current_motor_dir);
+}
+
 void statemachine_run(struct Statemachine* statemachine, struct Orderhandler* orderhandler, struct Timehandler* timehandler)
 {
 	int i = 0;
 	while(1)
 	{
 		//THINGS THAT NEED TO BE DONE EVERYTIME, UPDATING LISTS, CHECKING SENSORS, ETC
+		if (elev_get_stop_signal())
+		{
+			if (statemachine->state == STOP) elev_set_door_open_lamp(1); //OPENS DOOR IF ELEVATOR IS AT FLOOR
+			statemachine->state = ESTOP;
+		}
+			
 		i++;
 		orderhandler_update_wait_list(orderhandler);
 		orderhandler_update_lights(orderhandler);
 		orderhandler_update_target_list(orderhandler);
 		statemachine_update_current_floor(statemachine);
 		statemachine_update_current_floor_light(statemachine);
-		if (i % 20000 == 0) { statemachine_print_state(statemachine); orderhandler_print_lists(orderhandler);}
+		if (i % 15000 == 0) { statemachine_print_state(statemachine); orderhandler_print_lists(orderhandler);}
 	
 		switch (statemachine->state)
 		{
 	
 			case IDLE:	//CHECKS IF ANY BUTTON IS PRESSED, GOES TO DESIGNATED FLOOR IF CORRESPONDING BUTTON IS PRESSED
 			{
-				int button_pressed = 0;
-				for (int i = 0; i < 4; i++) if (orderhandler->wait_list[i] != NO_PASSENGER) {button_pressed = 1; orderhandler_add_target(orderhandler,i); }
-				if (orderhandler->target_list[0] != -1) button_pressed = 1;
-
-				if (button_pressed) statemachine->state = NORM;
+				int has_destination = 0;
+				for (int i = 0; i < 4; i++) if (orderhandler->wait_list[i] != NO_PASSENGER) {has_destination = 1; orderhandler_add_target(orderhandler,i); }
+				if (orderhandler->target_list[0] != -1) has_destination = 1;
+				if (has_destination) statemachine->state = NORM;
 				break;
 			}
 			case NORM:	//GOING TO TARGET IN TARGETLIST
 			{
-				if (statemachine->current_floor == orderhandler->target_list[0])
+				if (statemachine->current_floor == orderhandler->target_list[0] && elev_get_floor_sensor_signal() == statemachine->current_floor)
 				{ 
 					orderhandler_remove_target(orderhandler,0);
 					orderhandler->wait_list[elev_get_floor_sensor_signal()] = NO_PASSENGER;
@@ -86,11 +100,7 @@ void statemachine_run(struct Statemachine* statemachine, struct Orderhandler* or
 					break;
 				}
 				
-				//OPERATES MOTOR CORRESPONDING TO TARGET_LIST
-				if(statemachine->current_floor > orderhandler->target_list[0] && orderhandler->target_list[0] != -1) elev_set_motor_direction(DIRN_DOWN);
-				else if (statemachine->current_floor < orderhandler->target_list[0] && orderhandler->target_list[0] != -1) elev_set_motor_direction(DIRN_UP);
-				else elev_set_motor_direction(DIRN_STOP);
-				
+				statemachine_motor_control(statemachine, orderhandler);
 				break;
 			}
 			case STOP:	//OPENS DOOR FOR 3 SECONDS AND LETS PASSENGERS IN
@@ -107,9 +117,13 @@ void statemachine_run(struct Statemachine* statemachine, struct Orderhandler* or
 			}
 			case ESTOP:
 			{
-			
-			
-			
+				elev_set_motor_direction(DIRN_STOP);
+				orderhandler_init(orderhandler);
+				if (!elev_get_stop_signal())
+				{
+					statemachine->state = IDLE;
+					elev_set_door_open_lamp(0);
+				}
 				break;
 			}
 			default:

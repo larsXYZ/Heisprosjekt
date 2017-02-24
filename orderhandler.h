@@ -7,7 +7,7 @@ struct Orderhandler
 	int target_list[4]; //List holding next elevator targets, gotten from passengers
 };
 
-void orderhandler_init(struct Orderhandler* target); //Initializes orderhandler
+void orderhandler_init(struct Orderhandler* target); //Initializes orderhandler with clear lists
 
 void orderhandler_print_lists(struct Orderhandler *target); //Printing function for debugging, prints state of wait_list
 
@@ -20,3 +20,4 @@ void orderhandler_update_target_list(struct Orderhandler *target); //Updates tar
 void orderhandler_add_target(struct Orderhandler *target, int floor); //Adds new target to the target list if it fits, target = floornumber
 
 void orderhandler_remove_target(struct Orderhandler *target, int start_index); //Removes target #1 from target list
+

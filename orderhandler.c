@@ -7,7 +7,6 @@
 
 void orderhandler_init(struct Orderhandler* target)
 {
-	printf("   -initializing orderhandler\n");
 	target->wait_list[0] = NO_PASSENGER;
 	target->wait_list[1] = NO_PASSENGER;
 	target->wait_list[2] = NO_PASSENGER;
@@ -105,8 +104,6 @@ void orderhandler_remove_target(struct Orderhandler *target, int start_index)
 	}
 	
 }
-
-
 
 
 
