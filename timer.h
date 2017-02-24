@@ -5,6 +5,9 @@ struct Timehandler
 	int timeout;
 };
 
+void timehandler_init(struct Timehandler *timehandler);
+
 void timehandler_delay(struct Timehandler *timehandler, int delay);
 
-void timehandler_is_time_up(struct Timehandler *timehandler);
+int timehandler_is_time_up(struct Timehandler *timehandler);
+

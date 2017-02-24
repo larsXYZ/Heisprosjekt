@@ -52,13 +52,14 @@ void statemachine_run(struct Statemachine* statemachine, struct Orderhandler* or
 	int i = 0;
 	while(1)
 	{
+		//THINGS THAT NEED TO BE DONE EVERYTIME, UPDATING LISTS, CHECKING SENSORS, ETC
 		i++;
 		orderhandler_update_wait_list(orderhandler);
 		orderhandler_update_lights(orderhandler);
 		orderhandler_update_target_list(orderhandler);
 		statemachine_update_current_floor(statemachine);
 		statemachine_update_current_floor_light(statemachine);
-		if (i % 50000 == 0) { statemachine_print_state(statemachine); orderhandler_print_lists(orderhandler);}
+		if (i % 20000 == 0) { statemachine_print_state(statemachine); orderhandler_print_lists(orderhandler);}
 	
 		switch (statemachine->state)
 		{
@@ -67,35 +68,39 @@ void statemachine_run(struct Statemachine* statemachine, struct Orderhandler* or
 			{
 				int button_pressed = 0;
 				for (int i = 0; i < 4; i++) if (orderhandler->wait_list[i] != NO_PASSENGER) {button_pressed = 1; orderhandler_add_target(orderhandler,i); }
+				if (orderhandler->target_list[0] != -1) button_pressed = 1;
+
 				if (button_pressed) statemachine->state = NORM;
-				
 				break;
 			}
 			case NORM:	//GOING TO TARGET IN TARGETLIST
 			{
-				if (elev_get_floor_sensor_signal() == orderhandler->target_list[0]) { orderhandler_remove_target(orderhandler,0); statemachine->state = STOP; }
-				
-				if (orderhandler->target_list[0] == -1)
+				if (statemachine->current_floor == orderhandler->target_list[0])
 				{ 
-					statemachine->state = IDLE;
+					orderhandler_remove_target(orderhandler,0);
+					orderhandler->wait_list[elev_get_floor_sensor_signal()] = NO_PASSENGER;
+					statemachine->state = STOP;					
+					elev_set_door_open_lamp(1);
 					elev_set_motor_direction(DIRN_STOP);
 					timehandler_delay(timehandler,3);
-					elev_set_door_open_lamp(1);
 					break;
 				}
 				
+				//OPERATES MOTOR CORRESPONDING TO TARGET_LIST
 				if(statemachine->current_floor > orderhandler->target_list[0] && orderhandler->target_list[0] != -1) elev_set_motor_direction(DIRN_DOWN);
 				else if (statemachine->current_floor < orderhandler->target_list[0] && orderhandler->target_list[0] != -1) elev_set_motor_direction(DIRN_UP);
 				else elev_set_motor_direction(DIRN_STOP);
 				
 				break;
 			}
-			case STOP:
+			case STOP:	//OPENS DOOR FOR 3 SECONDS AND LETS PASSENGERS IN
 			{
 				if(timehandler_is_time_up(timehandler))
 				{
-					statemachine->state = NORM;
 					elev_set_door_open_lamp(0);
+					
+					if (orderhandler->target_list[0] == -1) statemachine->state = IDLE;
+					else statemachine->state = NORM;
 				}
 				
 				break;

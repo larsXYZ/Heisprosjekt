@@ -21,6 +21,7 @@ int main()
 	
 	//Initialize timehandler
 	struct Timehandler timehandler;
+	timehandler_init(&timehandler);
 	printf("   -initializing timehandler\n");
 	
 	//Initialize statemachine

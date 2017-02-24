@@ -1,6 +1,12 @@
 #include <stdio.h>
 #include "timer.h"
 
+
+void timehandler_init(struct Timehandler *timehandler)
+{
+	timehandler->timeout = -1;
+}
+
 void timehandler_delay(struct Timehandler *timehandler, int delay)
 {
 	time_t current_time;
@@ -9,6 +15,8 @@ void timehandler_delay(struct Timehandler *timehandler, int delay)
 
 }
 
-void timehandler_is_time_up(struct Timehandler *timehandler) {
-	return (time(NULL) >= timehandler->timeout);
+int timehandler_is_time_up(struct Timehandler *timehandler)
+{
+	if (timehandler->timeout == -1) return -1;
+	else return (time(NULL) >= timehandler->timeout);
 }
