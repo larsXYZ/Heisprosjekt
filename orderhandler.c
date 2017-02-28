@@ -94,7 +94,7 @@ void orderhandler_add_target(struct Orderhandler *target, int floor)
 	for (int i = 0; i < 4; i++) if(target->target_list[i] == -1) {target->target_list[i] = floor; return; }
 }
 
-void orderhandler_target_cleared(struct Orderhandler *target, int start_floor)
+void orderhandler_target_clear(struct Orderhandler *target, int start_floor)
 {
 	target->target_list[3] = -1;
 	for (int i = start_floor; i < 3; i++)
@@ -112,6 +112,7 @@ void orderhandler_remove_target_floor(struct Orderhandler *target, int floor)
 		if (target->target_list[i] == floor)
 		{
 			orderhandler_target_cleared(target, i);
+			break;
 		}
 	}
 }

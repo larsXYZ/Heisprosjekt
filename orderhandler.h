@@ -19,6 +19,6 @@ void orderhandler_update_target_list(struct Orderhandler *target); //Updates tar
 
 void orderhandler_add_target(struct Orderhandler *target, int floor); //Adds new target to the target list if it fits, target = floornumber
 
-void orderhandler_target_cleared(struct Orderhandler *target, int start_floor); //Removes element number start_floor from target list, and stokker om på resterende verdier
+void orderhandler_target_clear()struct Orderhandler *target, int start_floor); //Removes element with given index from target list
 
-void orderhandler_remove_target_floor(struct Orderhandler *target, int floor); //Removes floor from target list
+void orderhandler_remove_target_floor(struct Orderhandler *target, int floor); //Searches for target floor then removes it from target list
