@@ -114,11 +114,14 @@ void orderhandler_remove_target_floor(struct Orderhandler *target, int floor)
 	}
 }
 
-int orderhandler_stop_at_floor(struct Orderhandler *target, struct Statemachine *statemachine, int floor_sensor_value)
+int orderhandler_stop_at_floor(struct Orderhandler *orderhandler, struct Statemachine *statemachine, int floor_sensor_value)
 {
 	if (floor_sensor_value == -1) return 0; //Does not stop if elevator is not at a floor
 	
-	if (statemachine->current_floor == target->target_list[0] && floor_sensor_value == statemachine->current_floor) return 1; //Stops if floor is next target
+	if (statemachine->current_floor == orderhandler->target_list[0] && floor_sensor_value == statemachine->current_floor) return 1; //Stops if floor is next target
+	
+	if (statemachine->current_motor_dir == DIRN_UP && orderhandler->outside_going_up[floor_sensor_value]) return 1; //Stops if passenger is going same direction as we are
+	if (statemachine->current_motor_dir == DIRN_DOWN && orderhandler->outside_going_down[floor_sensor_value]) return 1; //Stops if passenger is going same direction as we are
 	
 	return 0;
 }

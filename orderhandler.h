@@ -23,4 +23,4 @@ void orderhandler_remove_target_index(struct Orderhandler *target, int start_flo
 
 void orderhandler_remove_target_floor(struct Orderhandler *target, int floor); //Searches for target floor then removes it from target list
 
-int orderhandler_stop_at_floor(struct Orderhandler *target, struct Statemachine *statemachine, int floor_sensor_value); //Decides if elevator should stop and pick up passenger at floor.
+int orderhandler_stop_at_floor(struct Orderhandler *orderhandler, struct Statemachine *statemachine, int floor_sensor_value); //Decides if elevator should stop and pick up passenger at floor.
