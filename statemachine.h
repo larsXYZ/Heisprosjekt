@@ -22,6 +22,6 @@ void statemachine_update_current_floor_light(struct Statemachine* target);//Upda
 
 void statemachine_run(struct Statemachine* statemachine, struct Orderhandler* orderhandler, struct Timehandler* timehandler); //MAIN OPERATING FUNCTION
 
-void statemachine_print_state(struct Statemachine* statemachine); //PRINTS CURRENT STATE FOR DEBUGGING
+void statemachine_print_state(struct Statemachine* target); //PRINTS CURRENT STATE FOR DEBUGGING
 
 void statemachine_motor_control(struct Statemachine* statemachine, struct Orderhandler* orderhandler); //CONTROLS MOTOR ACCORDING TO MOTOR CONTROL
