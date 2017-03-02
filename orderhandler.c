@@ -81,7 +81,7 @@ void orderhandler_update_target_list(struct Orderhandler *target)
 {
 	for (int floor = 0; floor < 4; floor++)
 	{
-		if (elev_get_button_signal(BUTTON_COMMAND, floor)) orderhandler_add_target(target,floor);
+		if (elev_get_button_signal(BUTTON_COMMAND, floor) && elev_get_floor_sensor_signal() != floor) orderhandler_add_target(target,floor);
 	}	
 }
 

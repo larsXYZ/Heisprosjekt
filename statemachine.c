@@ -72,7 +72,7 @@ void statemachine_run(struct Statemachine* statemachine, struct Orderhandler* or
 		orderhandler_update_target_list(orderhandler);
 		statemachine_update_current_floor(statemachine);
 		statemachine_update_current_floor_light(statemachine);
-		if (i % 15000 == 0) { statemachine_print_state(statemachine); orderhandler_print_lists(orderhandler);}
+		if (i % 5000 == 0) { statemachine_print_state(statemachine); orderhandler_print_lists(orderhandler);}
 	
 		switch (statemachine->state)
 		{
@@ -80,10 +80,14 @@ void statemachine_run(struct Statemachine* statemachine, struct Orderhandler* or
 			case IDLE:	//CHECKS IF ANY BUTTON IS PRESSED, GOES TO DESIGNATED FLOOR IF CORRESPONDING BUTTON IS PRESSED
 			{
 				int has_destination = 0;
-				for (int floor = 0; floor < 4; floor++) if (orderhandler->outside_going_up[floor]||orderhandler->outside_going_down[floor])
+
+				for (int floor = 0; floor < 4; floor++)
 				{
-					has_destination = 1;
-					orderhandler_add_target(orderhandler,floor);
+					if (orderhandler->outside_going_up[floor]||orderhandler->outside_going_down[floor])
+					{
+						has_destination = 1;
+						orderhandler_add_target(orderhandler,floor);
+					}
 				}
 				if (orderhandler->target_list[0] != -1) has_destination = 1;
 				if (has_destination) statemachine->state = NORM;
@@ -92,7 +96,6 @@ void statemachine_run(struct Statemachine* statemachine, struct Orderhandler* or
 			case NORM:	//GOING TO TARGET IN TARGETLIST
 			{
 				int floor_sensor_value = elev_get_floor_sensor_signal();
-				
 				if (orderhandler_stop_at_floor(orderhandler, statemachine, floor_sensor_value))
 				{ 	
 					if (statemachine->current_motor_dir == DIRN_UP || orderhandler->target_list[0] == floor_sensor_value) orderhandler->outside_going_up[floor_sensor_value] = 0;
@@ -101,7 +104,7 @@ void statemachine_run(struct Statemachine* statemachine, struct Orderhandler* or
 					orderhandler_remove_target_floor(orderhandler, floor_sensor_value);
 					
 					elev_set_door_open_lamp(1);
-					statemachine->state = STOP;					
+					statemachine->state = STOP;
 					elev_set_motor_direction(DIRN_STOP);
 					timehandler_delay(timehandler,3);
 					break;
@@ -122,7 +125,7 @@ void statemachine_run(struct Statemachine* statemachine, struct Orderhandler* or
 				
 				break;
 			}
-			case ESTOP:
+			case ESTOP:	//EMERGENCY STOP
 			{
 				elev_set_motor_direction(DIRN_STOP);
 				orderhandler_init(orderhandler);
@@ -142,3 +145,11 @@ void statemachine_run(struct Statemachine* statemachine, struct Orderhandler* or
 		}
 	}	
 }
+
+void statemachine_enter_stop_state(struct Statemachine* target)
+{
+	
+}
+
+
+
