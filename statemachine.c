@@ -94,11 +94,11 @@ void statemachine_run(struct Statemachine* statemachine, struct Orderhandler* or
 				int floor_sensor_value = elev_get_floor_sensor_signal();
 				
 				if (orderhandler_stop_at_floor(orderhandler, statemachine, floor_sensor_value))
-				{ 
-					orderhandler_remove_target_floor(orderhandler, floor_sensor_value);
+				{ 	
+					if (statemachine->current_motor_dir == DIRN_UP || orderhandler->target_list[0] == floor_sensor_value) orderhandler->outside_going_up[floor_sensor_value] = 0;
+					if (statemachine->current_motor_dir == DIRN_DOWN || orderhandler->target_list[0] == floor_sensor_value) orderhandler->outside_going_down[floor_sensor_value] = 0;
 					
-					if (statemachine->current_motor_dir == DIRN_UP) orderhandler->outside_going_up[floor_sensor_value] = 0;
-					else if (statemachine->current_motor_dir == DIRN_DOWN) orderhandler->outside_going_down[floor_sensor_value] = 0;
+					orderhandler_remove_target_floor(orderhandler, floor_sensor_value);
 					
 					elev_set_door_open_lamp(1);
 					statemachine->state = STOP;					

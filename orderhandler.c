@@ -50,8 +50,8 @@ void orderhandler_update_outside_lists(struct Orderhandler *target)
 		if (floor != 3) button_state_up = elev_get_button_signal(BUTTON_CALL_UP, floor);
 		if (floor != 0) button_state_down = elev_get_button_signal(BUTTON_CALL_DOWN, floor);
 		
-		target->outside_going_up[floor] = button_state_up; 
-		target->outside_going_down[floor] = button_state_down;
+		target->outside_going_up[floor] = button_state_up || target->outside_going_up[floor]; 
+		target->outside_going_down[floor] = button_state_down || target->outside_going_down[floor];
 	}
 
 }
@@ -123,6 +123,8 @@ int orderhandler_stop_at_floor(struct Orderhandler *orderhandler, struct Statema
 	if (statemachine->current_motor_dir == DIRN_UP && orderhandler->outside_going_up[floor_sensor_value]) return 1; //Stops if passenger is going same direction as we are
 	if (statemachine->current_motor_dir == DIRN_DOWN && orderhandler->outside_going_down[floor_sensor_value]) return 1; //Stops if passenger is going same direction as we are
 	
+	for (int floor = 0; floor < 4; floor++) if ((orderhandler->target_list[floor] == floor_sensor_value) && (floor_sensor_value != -1)) return 1;
+
 	return 0;
 }
 
