@@ -123,7 +123,7 @@ int orderhandler_stop_at_floor(struct Orderhandler *orderhandler, struct Statema
 	if (statemachine->current_motor_dir == DIRN_UP && orderhandler->outside_going_up[floor_sensor_value]) return 1; //Stops if passenger is going same direction as we are
 	if (statemachine->current_motor_dir == DIRN_DOWN && orderhandler->outside_going_down[floor_sensor_value]) return 1; //Stops if passenger is going same direction as we are
 	
-	for (int floor = 0; floor < 4; floor++) if ((orderhandler->target_list[floor] == floor_sensor_value) && (floor_sensor_value != -1)) return 1;
+	for (int floor = 0; floor < 4; floor++) if ((orderhandler->target_list[floor] == floor_sensor_value) && (floor_sensor_value != -1)) return 1; //Stops if a passenger wants of at this floor
 
 	return 0;
 }
