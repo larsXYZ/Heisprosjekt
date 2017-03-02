@@ -67,7 +67,7 @@ void statemachine_run(struct Statemachine* statemachine, struct Orderhandler* or
 		}
 			
 		i++;
-		orderhandler_update_wait_list(orderhandler);
+		orderhandler_update_outside_lists(orderhandler);
 		orderhandler_update_lights(orderhandler);
 		orderhandler_update_target_list(orderhandler);
 		statemachine_update_current_floor(statemachine);
@@ -80,7 +80,11 @@ void statemachine_run(struct Statemachine* statemachine, struct Orderhandler* or
 			case IDLE:	//CHECKS IF ANY BUTTON IS PRESSED, GOES TO DESIGNATED FLOOR IF CORRESPONDING BUTTON IS PRESSED
 			{
 				int has_destination = 0;
-				for (int floor = 0; floor < 4; floor++) if (orderhandler->outside_going_up[floor]||orderhandler->outside_going_down[floor]) {has_destination = 1; orderhandler_add_target(orderhandler,floor); }
+				for (int floor = 0; floor < 4; floor++) if (orderhandler->outside_going_up[floor]||orderhandler->outside_going_down[floor])
+				{
+					has_destination = 1;
+					orderhandler_add_target(orderhandler,floor);
+				}
 				if (orderhandler->target_list[0] != -1) has_destination = 1;
 				if (has_destination) statemachine->state = NORM;
 				break;
@@ -91,7 +95,7 @@ void statemachine_run(struct Statemachine* statemachine, struct Orderhandler* or
 				
 				if (orderhandler_stop_at_floor(orderhandler, statemachine, floor_sensor_value))
 				{ 
-					orderhandler_remove_target_floor(orderhandler, floor_sensor_value));
+					orderhandler_remove_target_floor(orderhandler, floor_sensor_value);
 					
 					if (statemachine->current_motor_dir == DIRN_UP) orderhandler->outside_going_up[floor_sensor_value] = 0;
 					else if (statemachine->current_motor_dir == DIRN_DOWN) orderhandler->outside_going_down[floor_sensor_value] = 0;

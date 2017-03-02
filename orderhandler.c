@@ -108,7 +108,7 @@ void orderhandler_remove_target_floor(struct Orderhandler *target, int floor)
 	{
 		if (target->target_list[i] == floor)
 		{
-			orderhandler_target_clear(target, i);
+			orderhandler_remove_target_index(target, i);
 			break;
 		}
 	}
