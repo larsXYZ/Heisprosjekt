@@ -50,8 +50,8 @@ void orderhandler_update_outside_lists(struct Orderhandler *target)
 		if (floor != 3) button_state_up = elev_get_button_signal(BUTTON_CALL_UP, floor);
 		if (floor != 0) button_state_down = elev_get_button_signal(BUTTON_CALL_DOWN, floor);
 		
-		target->outside_going_up[floor] = button_state_up || target->outside_going_up[floor]; 
-		target->outside_going_down[floor] = button_state_down || target->outside_going_down[floor];
+		target->outside_going_up[floor] = (button_state_up || target->outside_going_up[floor]) && elev_get_floor_sensor_signal() != floor; 
+		target->outside_going_down[floor] = (button_state_down || target->outside_going_down[floor]) && elev_get_floor_sensor_signal() != floor;
 	}
 
 }
@@ -73,7 +73,7 @@ void orderhandler_update_lights(struct Orderhandler *target)
 		if (floor != 0) elev_set_button_lamp(BUTTON_CALL_DOWN, floor, LIGHT_DOWN);
 		
 		elev_set_button_lamp(BUTTON_COMMAND, floor, 0);
-		for (int q = 0; q < 4; q++) if (target->target_list[q] == floor) {elev_set_button_lamp(BUTTON_COMMAND, floor, 1); break;}
+		for (int q = 0; q < 4; q++) if (target->target_list[q] == floor && elev_get_floor_sensor_signal() != floor) {elev_set_button_lamp(BUTTON_COMMAND, floor, 1); break;}
 	}
 }
 
@@ -118,6 +118,8 @@ int orderhandler_stop_at_floor(struct Orderhandler *orderhandler, struct Statema
 {
 	if (floor_sensor_value == -1) return 0; //Does not stop if elevator is not at a floor
 	
+	if (elev_get_floor_sensor_signal() == statemachine->current_floor && elev_get_button_signal(BUTTON_COMMAND,elev_get_floor_sensor_signal())) return 1; //Stops if we are at a floor and orders to the same floor
+
 	if (statemachine->current_floor == orderhandler->target_list[0] && floor_sensor_value == statemachine->current_floor) return 1; //Stops if floor is next target
 	
 	if (statemachine->current_motor_dir == DIRN_UP && orderhandler->outside_going_up[floor_sensor_value]) return 1; //Stops if passenger is going same direction as we are

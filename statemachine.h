@@ -9,7 +9,7 @@ struct Statemachine
 {
 	enum machine_state state; //State of statemachine
 	int current_floor; //0 - first, 1 - second , 2 - third, 3 - fourth
-	elev_motor_direction_t current_motor_dir; 
+	elev_motor_direction_t current_motor_dir; //Current direction of motor, used when recovering from emergency stop and for controlling motor.
 };
 
 void statemachine_init(struct Statemachine* target); //Initializes statemachine
@@ -25,3 +25,7 @@ void statemachine_run(struct Statemachine* statemachine, struct Orderhandler* or
 void statemachine_print_state(struct Statemachine* target); //PRINTS CURRENT STATE FOR DEBUGGING
 
 void statemachine_motor_control(struct Statemachine* statemachine, struct Orderhandler* orderhandler); //CONTROLS MOTOR ACCORDING TO MOTOR CONTROL
+
+void statemachine_enter_stop_state(struct Statemachine* statemachine, struct Orderhandler* orderhandler, struct Timehandler* timehandler); //Function for entering stop state
+
+void statemachine_print_motor_dir(struct Statemachine* target); //Prints motor dir, for debugging
