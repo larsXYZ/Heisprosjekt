@@ -3,7 +3,7 @@
 struct Orderhandler;
 struct Timehandler;
 
-enum machine_state{IDLE, NORM, STOP, ESTOP}; //THE STATES THE ELEVATOR CAN BE IN
+enum machine_state{IDLE, NORM, STOP, ESTOP}; //The possible states of the statemachine
 
 struct Statemachine
 {
@@ -20,11 +20,11 @@ void statemachine_update_current_floor(struct Statemachine* target); //Updates t
 
 void statemachine_update_current_floor_light(struct Statemachine* target);//Updates the current_floor lights
 
-void statemachine_run(struct Statemachine* statemachine, struct Orderhandler* orderhandler, struct Timehandler* timehandler); //MAIN OPERATING FUNCTION
+void statemachine_run(struct Statemachine* statemachine, struct Orderhandler* orderhandler, struct Timehandler* timehandler); //Main operating function
 
-void statemachine_print_state(struct Statemachine* target); //PRINTS CURRENT STATE FOR DEBUGGING
+void statemachine_print_state(struct Statemachine* target); //Prints state, for debugging
 
-void statemachine_motor_control(struct Statemachine* statemachine, struct Orderhandler* orderhandler); //CONTROLS MOTOR ACCORDING TO MOTOR CONTROL
+void statemachine_motor_control(struct Statemachine* statemachine, struct Orderhandler* orderhandler); //Controls motor
 
 void statemachine_enter_stop_state(struct Statemachine* statemachine, struct Orderhandler* orderhandler, struct Timehandler* timehandler); //Function for entering stop state
 

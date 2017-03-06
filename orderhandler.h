@@ -4,12 +4,12 @@ struct Orderhandler
 {
 	int outside_going_up[4]; //1 if person at floor (index 0-3) is going up, 0 if not
 	int outside_going_down[4]; //1 if person at floor (index 0-3) is going down, 0 if not
-	int target_list[4]; //List holding next elevator targets, gotten from passengers
+	int target_list[4]; //List holding next elevator targets, gotten from passengers. -1 indicates empty spot, otherwise the floor index is used.
 };
 
 void orderhandler_init(struct Orderhandler* target); //Initializes orderhandler with clear lists
 
-void orderhandler_print_lists(struct Orderhandler *target); //Printing function for debugging, prints state of wait_list
+void orderhandler_print_lists(struct Orderhandler *target); //Printing function for debugging, prints state of wait_list and target_list
 
 void orderhandler_update_outside_lists(struct Orderhandler *orderhandler, struct Statemachine* statemachine); //Checks with sensors to update outside lists
 

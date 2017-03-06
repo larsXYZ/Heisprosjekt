@@ -41,7 +41,8 @@ void orderhandler_print_lists(struct Orderhandler *target)
 
 void orderhandler_update_outside_lists(struct Orderhandler *orderhandler, struct Statemachine *statemachine)
 {
-	for (int floor = 0; floor < 4; floor++) //Går gjennom bestillingsknappene og oppdaterer minne
+	//Iterates through buttons and updates outside_lists
+	for (int floor = 0; floor < 4; floor++) 
 	{
 		int button_state_up = 0;
 		int button_state_down = 0;	
