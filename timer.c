@@ -19,38 +19,3 @@ int timehandler_is_time_up(struct Timehandler *timehandler)
 	if (timehandler->timeout == -1) return -1;
 	else return (clock() >= timehandler->timeout);
 }
-
-int main() {
-	struct Timehandler timehandler;
-
-	system("PAUSE");
-	timehandler_delay(&timehandler, 3);
-	while (1) {
-		if (timehandler_is_time_up(&timehandler)) {
-			break;
-		}
-	}
-	printf("OK");
-	timehandler_delay(&timehandler, 3);
-	while (1) {
-		if (timehandler_is_time_up(&timehandler)) {
-			break;
-		}
-	}
-	printf("OK");
-	timehandler_delay(&timehandler, 3);
-	while (1) {
-		if (timehandler_is_time_up(&timehandler)) {
-			break;
-		}
-	}
-	printf("OK");
-	timehandler_delay(&timehandler, 3);
-	while (1) {
-		if (timehandler_is_time_up(&timehandler)) {
-			break;
-		}
-	}
-	printf("OK");
-	return 0;
-}
