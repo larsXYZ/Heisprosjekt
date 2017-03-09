@@ -1,7 +1,7 @@
 #include "elev.h"
 #include "statemachine.h"
 #include "orderhandler.h"
-#include "timer.h"
+#include "timehandler.h"
 
 #include <stdio.h>
 
