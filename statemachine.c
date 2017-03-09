@@ -1,6 +1,6 @@
 #include "statemachine.h"
 #include "orderhandler.h"
-#include "timer.h"
+#include "timehandler.h"
 #include <stdio.h>
 
 /* For function descriptions see statemachine.h */
@@ -8,6 +8,8 @@
 void statemachine_run(struct Statemachine* statemachine, struct Orderhandler* orderhandler, struct Timehandler* timehandler)
 {
 	int i = 0;
+	int emergency_restart = 1;
+	
 	while(1)
 	{
 		//Increases iteration count
@@ -45,8 +47,6 @@ void statemachine_run(struct Statemachine* statemachine, struct Orderhandler* or
 	
 			case IDLE:	//When the elevator has nothing to do it checks if anyone wants into or out of the elevator.
 			{
-				//Sets motor to stop
-				statemachine->current_motor_dir = DIRN_STOP;
 				
 				//Checks if we should enter stop state
 				if (floor_sensor_value == statemachine->current_floor) 
@@ -90,14 +90,29 @@ void statemachine_run(struct Statemachine* statemachine, struct Orderhandler* or
 				{
 					if (orderhandler->target_list[0] > statemachine->current_floor && orderhandler->target_list[0] != -1) statemachine->current_motor_dir = DIRN_UP;
 					if (orderhandler->target_list[0] < statemachine->current_floor && orderhandler->target_list[0] != -1) statemachine->current_motor_dir = DIRN_DOWN;
+					emergency_restart = 1;
 				}
 				else
 				{
-					/*
-					
-						INSERT HANDLING HERE
-				
-					*/
+					//If we return from emergency stop, and want to go back to current floor, change direction
+					if (orderhandler->target_list[0] == statemachine->current_floor)
+					{
+						if (statemachine->current_motor_dir == DIRN_DOWN && emergency_restart)
+						{
+							statemachine->current_motor_dir = DIRN_UP;
+							emergency_restart = 0;
+						}
+						else if (statemachine->current_motor_dir == DIRN_UP && emergency_restart) 
+						{					
+							statemachine->current_motor_dir = DIRN_DOWN;
+							emergency_restart = 0;
+						}
+					}
+					else
+					{
+						if (orderhandler->target_list[0] > statemachine->current_floor && orderhandler->target_list[0] != -1) statemachine->current_motor_dir = DIRN_UP;
+						if (orderhandler->target_list[0] < statemachine->current_floor && orderhandler->target_list[0] != -1) statemachine->current_motor_dir = DIRN_DOWN;
+					}
 				}
 				//Stops if we have arrived at target, or if we can pick up a passenger along the way
 				if (orderhandler_stop_at_floor(orderhandler, statemachine, floor_sensor_value))
@@ -206,6 +221,8 @@ void statemachine_print_state(struct Statemachine* target)
 
 void statemachine_motor_control(struct Statemachine* statemachine, struct Orderhandler* orderhandler)
 {
+	if (!(statemachine->state == STOP || statemachine->state == NORM)) return;
+
 	//Updates hardware
 	elev_set_motor_direction(statemachine->current_motor_dir);
 }
