@@ -1,6 +1,8 @@
 #include "timehandler.h"
 #include <stdio.h>
 
+/* For function descriptions see timehandler.h */
+
 void timehandler_init(struct Timehandler *target)
 {
 	target->timeout = -1;
