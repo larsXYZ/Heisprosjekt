@@ -1,6 +1,7 @@
 //Handles time criterias using processor clock
 
 #include <time.h>
+
 struct Timehandler
 {
 	int timeout;
