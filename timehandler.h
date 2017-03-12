@@ -1,4 +1,7 @@
-//Handles time criterias using processor clock
+/*
+Description:
+    Handles time criterias using processor clock
+*/
 
 #include <time.h>
 
