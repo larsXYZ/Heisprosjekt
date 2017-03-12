@@ -1,3 +1,8 @@
+/*
+Description:
+    Keeps track of the elevator's states
+*/
+
 #include "elev.h"
 
 struct Orderhandler;
