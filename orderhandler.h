@@ -1,3 +1,8 @@
+/*
+Description:
+    Handles orders from the elevator button panel
+*/
+
 struct Statemachine;
 
 struct Orderhandler
